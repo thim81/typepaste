@@ -12,7 +12,7 @@ TypePaste is a lightweight macOS menu-bar app that reads the current clipboard t
 
 **Settings**
 
-![TypePaste Settings](./screenshots/TypePaste-settings.png)
+<img src="./screenshots/TypePaste-settings.png" alt="TypePaste Settings" width="400" />
 
 
 ## Features
