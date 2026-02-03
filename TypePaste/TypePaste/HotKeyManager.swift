@@ -19,12 +19,12 @@ final class HotKeyManager {
     }
 
     deinit {
-        if let hotKeyRef {
-            UnregisterEventHotKey(hotKeyRef)
-        }
-        if let handlerRef {
-            RemoveEventHandler(handlerRef)
-        }
+        unregisterHotKey()
+    }
+
+    func update(keyCode: Int, modifiers: UInt32) {
+        unregisterHotKey()
+        registerHotKey(keyCode: keyCode, modifiers: modifiers)
     }
 
     private func registerHotKey(keyCode: Int, modifiers: UInt32) {
@@ -53,6 +53,17 @@ final class HotKeyManager {
             UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()),
             &handlerRef
         )
+    }
+
+    private func unregisterHotKey() {
+        if let hotKeyRef {
+            UnregisterEventHotKey(hotKeyRef)
+            self.hotKeyRef = nil
+        }
+        if let handlerRef {
+            RemoveEventHandler(handlerRef)
+            self.handlerRef = nil
+        }
     }
 
     private func handleHotKeyPressed() {

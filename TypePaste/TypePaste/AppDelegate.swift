@@ -13,16 +13,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private let clipboardTyper = ClipboardTyper()
     private var hotKeyManager: HotKeyManager?
+    private var hotKeyObserver: NSObjectProtocol?
+    private weak var typeClipboardMenuItem: NSMenuItem?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         requestAccessibilityPermission()
         NSApp.setActivationPolicy(.accessory)
         setUpStatusItem()
         setUpHotKey()
+        observeHotKeyChanges()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
         hotKeyManager = nil
+        hotKeyObserver = nil
     }
 
     private func setUpStatusItem() {
@@ -30,11 +34,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.image = NSImage(systemSymbolName: "keyboard", accessibilityDescription: "TypePaste")
 
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(
-            title: "Type Clipboard (⌘1)",
+        let typeItem = NSMenuItem(
+            title: "Type Clipboard (\(HotKeySettings.displayString(keyCode: HotKeySettings.keyCode, modifiers: HotKeySettings.modifiers)))",
             action: #selector(typeClipboard),
-            keyEquivalent: "1"
-        ))
+            keyEquivalent: ""
+        )
+        menu.addItem(typeItem)
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(
             title: "Settings…",
@@ -49,13 +54,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.menu = menu
 
         self.statusItem = statusItem
+        self.typeClipboardMenuItem = typeItem
     }
 
     private func setUpHotKey() {
-        hotKeyManager = HotKeyManager(keyCode: kVK_ANSI_1, modifiers: UInt32(cmdKey))
-        hotKeyManager?.onHotKeyPressed = { [weak self] in
-            self?.typeClipboard()
+        updateHotKeyFromSettings()
+    }
+
+    private func observeHotKeyChanges() {
+        hotKeyObserver = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateHotKeyFromSettings()
         }
+    }
+
+    private func updateHotKeyFromSettings() {
+        let keyCode = Int(HotKeySettings.keyCode)
+        let modifiers = HotKeySettings.modifiers
+
+        if let hotKeyManager {
+            hotKeyManager.update(keyCode: keyCode, modifiers: modifiers)
+        } else {
+            hotKeyManager = HotKeyManager(keyCode: keyCode, modifiers: modifiers)
+            hotKeyManager?.onHotKeyPressed = { [weak self] in
+                self?.typeClipboard()
+            }
+        }
+
+        typeClipboardMenuItem?.title = "Type Clipboard (\(HotKeySettings.displayString(keyCode: UInt32(keyCode), modifiers: modifiers)))"
     }
 
     private func requestAccessibilityPermission() {

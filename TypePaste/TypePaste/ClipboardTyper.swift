@@ -11,7 +11,13 @@ final class ClipboardTyper {
     private let keyboardTyper = KeyboardTyper()
 
     func typeClipboardContents() {
-        guard let text = NSPasteboard.general.string(forType: .string), !text.isEmpty else {
+        guard let rawText = NSPasteboard.general.string(forType: .string) else {
+            NSSound.beep()
+            return
+        }
+
+        let text = rawText.trimmingCharacters(in: .newlines)
+        guard !text.isEmpty else {
             NSSound.beep()
             return
         }

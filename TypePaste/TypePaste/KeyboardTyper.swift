@@ -10,12 +10,13 @@ import Foundation
 
 final class KeyboardTyper {
     private let eventSource = CGEventSource(stateID: .combinedSessionState)
-    private let delayPerCharacter: TimeInterval = 0.04
 
     func typeText(_ text: String) {
+        // Give the system time to finish handling the hotkey and refocus the target app.
+        Thread.sleep(forTimeInterval: TypingSettings.initialDelay)
         for character in text {
             typeCharacter(character)
-            Thread.sleep(forTimeInterval: delayPerCharacter)
+            Thread.sleep(forTimeInterval: TypingSettings.delayPerCharacter)
         }
     }
 
