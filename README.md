@@ -1,6 +1,6 @@
 # TypePaste
 
-![TypePaste Logo](TypePaste/Assets.xcassets/AppIcon.appiconset/icon-mac-512x512.png)
+![TypePaste Logo](TypePaste/Assets.xcassets/AppIcon.appiconset/icon-mac-128x128.png)
 
 TypePaste is a lightweight macOS menu-bar app that reads the current clipboard text and types it into the active app as if you were typing. It is built for product demos and screen recordings where you want a natural, human-like typing effect without manually retyping content.
 
