@@ -4,10 +4,16 @@
 
 TypePaste is a lightweight macOS menu-bar app that reads the current clipboard text and types it into the active app as if you were typing. It is built for product demos and screen recordings where you want a natural, human-like typing effect without manually retyping content.
 
-## Demo
+## Screenshots
 
+**Demo**
 
-![TypePaste Demo](./demo/TypePaste-demo.gif)
+![TypePaste Demo](./screenshots/TypePaste-demo.gif)
+
+**Settings**
+
+![TypePaste Settings](./screenshots/TypePaste-settings.png)
+
 
 ## Features
 - Global hotkey to type clipboard contents into any app.
