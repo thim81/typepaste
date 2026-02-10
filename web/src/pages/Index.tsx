@@ -1,10 +1,11 @@
-import { Download, ExternalLink, Keyboard, Timer, Video, Monitor } from "lucide-react";
+import { Download, ExternalLink, Keyboard, Timer, Video, Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import typepasteLogo from "@/assets/typepaste-logo.png";
-import typepasteDemo from "@/assets/typepaste-demo.gif";
 
 const GITHUB_REPO = "https://github.com/trinixlabs/typepaste";
 const DOWNLOAD_URL = "https://github.com/trinixlabs/typepaste/releases/tag/v1.0.0";
+const LOGO_URL = "/apple-touch-icon.png";
+const DEMO_URL = "/TypePaste-demo.gif";
 
 const features = [
   {
@@ -43,8 +44,24 @@ const Triangle = ({ className }: { className?: string }) => (
 );
 
 const Index = () => {
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
+      <div className="fixed right-4 top-4 z-50 sm:right-6 sm:top-6">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2 border-border/80 bg-background/70 backdrop-blur"
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <span>{isDark ? "Light mode" : "Dark mode"}</span>
+        </Button>
+      </div>
+
       {/* Decorative triangles */}
       <Triangle className="absolute -top-10 -left-10 w-60 rotate-12 pointer-events-none" />
       <Triangle className="absolute top-1/4 -right-16 w-80 -rotate-6 pointer-events-none" />
@@ -54,7 +71,7 @@ const Index = () => {
       {/* ── Hero ── */}
       <header className="relative z-10 flex flex-col items-center px-6 pt-24 pb-16 text-center">
         <img
-          src={typepasteLogo}
+          src={LOGO_URL}
           alt="TypePaste app icon"
           width={96}
           height={96}
@@ -87,7 +104,7 @@ const Index = () => {
         {/* Demo GIF */}
         <div className="mt-14 w-full max-w-2xl overflow-hidden rounded-xl border border-border shadow-2xl shadow-primary/10">
           <img
-            src={typepasteDemo}
+            src={DEMO_URL}
             alt="TypePaste demo showing typing simulation"
             className="w-full"
             loading="lazy"
