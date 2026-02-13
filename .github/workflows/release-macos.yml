@@ -37,6 +37,10 @@ jobs:
             -scheme "$SCHEME" \
             -configuration Release \
             -derivedDataPath "$DERIVED_DATA" \
+            -destination "platform=macOS,arch=arm64" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
             clean build
 
           APP_PATH="$DERIVED_DATA/Build/Products/Release/${SCHEME}.app"
