@@ -152,21 +152,28 @@ jobs:
             exit 1
           fi
 
-          sed -i -E "s/^  version \".*\"/  version \"${VERSION}\"/" "$CASK_FILE"
-          sed -i -E "s/^  sha256 \".*\"/  sha256 \"${DMG_SHA256}\"/" "$CASK_FILE"
+          RELEASE_URL="https://github.com/trinixlabs/typepaste/releases/download/${TAG}/TypePaste-${VERSION}.dmg"
+          sed -i -E "s|^  version \".*\"|  version \"${VERSION}\"|" "$CASK_FILE"
+          sed -i -E "s|^  sha256 \".*\"|  sha256 \"${DMG_SHA256}\"|" "$CASK_FILE"
+          sed -i -E "s|^  url \".*\"|  url \"${RELEASE_URL}\"|" "$CASK_FILE"
 
           echo "Updated cask:"
           cat "$CASK_FILE"
 
-      - name: Create PR in shared tap repo
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          path: homebrew-tap
-          branch: "cask-typepaste-${{ env.VERSION }}"
-          commit-message: "typepaste: update to ${{ env.VERSION }}"
-          title: "typepaste: update to ${{ env.VERSION }}"
-          body: |
-            Automated update of TypePaste cask to ${{ env.VERSION }}.
-            SHA256: ${{ env.DMG_SHA256 }}
-          delete-branch: true
+      - name: Commit and push cask update to tap main
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd homebrew-tap
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- Casks/typepaste.rb; then
+            echo "No cask changes detected; skipping commit."
+            exit 0
+          fi
+
+          git add Casks/typepaste.rb
+          git commit -m "typepaste: update to ${VERSION}"
+          git push origin HEAD:main
