@@ -4,6 +4,8 @@
 
 TypePaste is a lightweight macOS menu-bar app that reads the current clipboard text and types it into the active app as if you were typing. It is built for product demos and screen recordings where you want a natural, human-like typing effect without manually retyping content.
 
+![macOS](https://img.shields.io/badge/platform-macOS-lightgrey) 
+
 ## Screenshots
 
 **Demo**
@@ -21,18 +23,13 @@ TypePaste is a lightweight macOS menu-bar app that reads the current clipboard t
 - Recording mode that increases delays to avoid dropped characters in screen recordings.
 - Menu-bar UI with quick access to settings.
 
+**Notes**
+- The default hotkey is `⌘1`. You can change the hotkey in Settings.
+- The app uses "Accessibility" to post keyboard events, so it must be allowed in "Settings" > "Privacy & Security".
+
 ## How-To
 
-**How To Run**
-1. Open `TypePaste.xcodeproj` in Xcode.
-2. Select the `TypePaste` scheme.
-3. Press `Run`.
-4. When prompted, grant Accessibility permissions in `System Settings > Privacy & Security > Accessibility`.
-
-**How To Build**
-1. Open `TypePaste.xcodeproj` in Xcode.
-2. Select the `TypePaste` scheme.
-3. Use `Product > Build` or `Product > Archive` to create a build.
+### Install
 
 **Install from DMG (GitHub Releases)**
 1. Download the latest `.dmg` from [Releases](https://github.com/trinixlabs/TypePaste/releases).
@@ -49,6 +46,27 @@ brew install --cask typepaste
 2. Launch TypePaste from `Applications`.
 3. On first launch (unsigned app): right-click `TypePaste.app` -> `Open` -> `Open`.
 
+**If macOS says the app is "broken" or should be moved to Bin**
+This can happen with unsigned builds blocked by Gatekeeper quarantine.
+
+```bash
+xattr -dr com.apple.quarantine /Applications/TypePaste.app
+open /Applications/TypePaste.app
+```
+
+### Develop
+
+**How To Run**
+1. Open `TypePaste.xcodeproj` in Xcode.
+2. Select the `TypePaste` scheme.
+3. Press `Run`.
+4. When prompted, grant Accessibility permissions in `System Settings > Privacy & Security > Accessibility`.
+
+**How To Build**
+1. Open `TypePaste.xcodeproj` in Xcode.
+2. Select the `TypePaste` scheme.
+3. Use `Product > Build` or `Product > Archive` to create a build.
+
 **Build App**
 1. Open `TypePaste.xcodeproj` in Xcode.
 2. Select the `TypePaste` scheme.
@@ -57,6 +75,3 @@ brew install --cask typepaste
 5. Choose “Do not sign” and export the `.app`.
 6. Compress the `.app` into a `.zip` for distribution.
 
-**Notes**
-- The default hotkey is `⌘1`. You can change the hotkey in Settings.
-- The app uses Accessibility to post keyboard events, so it must be allowed in Privacy & Security.
